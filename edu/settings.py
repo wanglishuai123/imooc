@@ -144,7 +144,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # 云片网相关配置
-YP_API_KEY = "f655e46bfdc3884de2978a23cc71cb60"
+YP_API_KEY = "you api"
 
 # REDIS相关配置
 REDIS_HOST = "localhost"
