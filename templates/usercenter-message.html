@@ -1,0 +1,204 @@
+{% extends "userbase.html" %}
+{% block title %}
+    我的消息
+{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'user:info' %}">个人中心</a>></li>
+                <li>我的消息</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block right %}
+    <div class="right">
+        <div class="personal_des Releasecont">
+            <div class="head">
+                <h1>我的消息</h1>
+            </div>
+
+        </div>
+        <div class="personal_des permessage">
+            <div class="head">
+                <ul class="tab_header messagehead">
+                    <li class="active"><a href="/user/message/">个人消息</a></li>
+                </ul>
+
+
+            </div>
+            <div class="messagelist">
+                {% for message in messages.object_list %}
+                    <div class="messages">
+                        <div class="fr">
+                            <div class="top"><span class="fl time">{{ message.add_time }}</span><span
+                                    class="fr btn foldbtn"></span></div>
+                            <p>
+                                {{ message.message }}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="pageturn pagerright">
+                <ul class="pagelist">
+                    {% if messages.has_previous %}
+                        <li class="long"><a
+                                href="?{{ messages.previous_page_number.querystring }}">上一页</a></li>
+                    {% endif %}
+
+                    {% for page in messages.pages %}
+                        {% if page %}
+                            {% ifequal page messages.number %}
+                                <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                            {% else %}
+                                <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                            {% endifequal %}
+                        {% else %}
+                            <li class="none">...</li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if messages.has_next %}
+                        <li class="long"><a
+                                href="?{{ messages.next_page_number.querystring }}">下一页</a>
+                        </li>
+
+                    {% endif %}
+                </ul>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.jsDeleteFav_course').on('click', function () {
+            var _this = $(this),
+                favid = _this.attr('data-favid');
+            alert(favid)
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/org/add_fav/",
+                data: {
+                    fav_type: 1,
+                    fav_id: favid,
+                    csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
+        });
+    });
+    $(document).ready(function () {
+        $('.jsDeleteFav_teacher').on('click', function () {
+            var _this = $(this),
+                favid = _this.attr('data-favid');
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/org/add_fav/",
+                data: {
+                    fav_type: 3,
+                    fav_id: favid,
+                    csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $('.jsDeleteFav_org').on('click', function () {
+            var _this = $(this),
+                favid = _this.attr('data-favid');
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "/org/add_fav/",
+                data: {
+                    fav_type: 2,
+                    fav_id: favid,
+                    csrfmiddlewaretoken: '799Y6iPeEDNSGvrTu3noBrO4MBLv6enY'
+                },
+                async: true,
+                success: function (data) {
+                    Dml.fun.winReload();
+                }
+            });
+        });
+    });
+</script>
+<script>
+    var shareUrl = '',
+        shareText = '',
+        shareDesc = '',
+        shareComment = '';
+    $(function () {
+        $(".bdsharebuttonbox a").mouseover(function () {
+            var type = $(this).attr('data-cmd'),
+                $parent = $(this).parent('.bdsharebuttonbox'),
+                fxurl = $parent.attr('data-url'),
+                fxtext = $parent.attr('data-text'),
+                fxdesc = $parent.attr('data-desc'),
+                fxcomment = $parent.attr('data-comment');
+            switch (type) {
+                case 'tsina':
+                case 'tqq':
+                case 'renren':
+                    shareUrl = fxurl;
+                    shareText = fxdesc;
+                    shareDesc = '';
+                    shareComment = '';
+                    break;
+                default :
+                    shareUrl = fxurl;
+                    shareText = fxtext;
+                    shareDesc = fxdesc;
+                    shareComment = fxcomment;
+                    break;
+            }
+        });
+    });
+
+    function SetShareUrl(cmd, config) {
+        if (shareUrl) {
+            config.bdUrl = "" + shareUrl;
+        }
+        if (shareText) {
+            config.bdText = shareText;
+        }
+        if (shareDesc) {
+            config.bdDesc = shareDesc;
+        }
+        if (shareComment) {
+            config.bdComment = shareComment;
+        }
+
+        return config;
+    }
+
+    window._bd_share_config = {
+        "common": {
+            "onBeforeClick": SetShareUrl,
+            "bdPic": "",
+            "bdMini": "2",
+            "searchPic": "1",
+            "bdMiniList": false
+        },
+        "share": {
+            "bdSize": "16"
+        }
+    };
+    with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com../api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+</script>

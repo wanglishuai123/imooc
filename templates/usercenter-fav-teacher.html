@@ -1,0 +1,96 @@
+{% extends "userbase.html" %}
+{% block title %}
+    我的收藏
+{% endblock %}
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'user:info' %}">个人中心</a>></li>
+                <li>我的收藏</li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}
+{% block right %}
+    <div class="right">
+        <div class="personal_des Releasecont">
+            <div class="head">
+                <h1>我的收藏</h1>
+            </div>
+        </div>
+        <div class="personal_des permessage">
+            <div class="head">
+                <ul class="tab_header messagehead">
+                    <li class="{% if current_page_1 == "org" %}
+                    active
+                    {% endif %} "><a href="{% url 'user:myfavorg' %}">课程机构</a></li>
+                    <li class="{% if current_page_1 == "teacher" %}
+                    active
+                    {% endif %} "><a href="{% url 'user:myfavteacher' %}">授课教师 </a></li>
+                    <li class="{% if current_page_1 == "courses" %}
+                    active
+                    {% endif %} "><a href="{% url 'user:myfavcourses' %}">公开课程</a></li>
+                </ul>
+            </div>
+            <div class="messagelist">
+                {% for teacher in teacher_list %}
+                    <div class=" butler_list butler-fav-box">
+                        <dl class="des users">
+                            <dt>
+                                <a href="{% url 'org:detail' teacher.id%}">
+                                    <img width="100" height="100"
+                                         src="{{ MEDIA_URL }}{{ teacher.image }}"/>
+                                </a>
+                            </dt>
+                            <dd>
+                                <h1>
+                                    <a href="{% url 'org:detail' teacher.id%}">
+                                        {{ teacher.name }}<span class="key">认证教师</span>
+                                    </a>
+                                </h1>
+                                <ul class="cont clearfix">
+                                    <li class="time">工作年限：<span>{{ teacher.work_years }}年</span></li>
+                                    <li class="c7">课程数：<span>{{ teacher.course_set.all.count }}</span></li>
+                                </ul>
+                                <ul class="cont clearfix">
+                                    <li class="time">工作公司：<span>{{ teacher.work_company }}</span></li>
+                                    <li class="c7">公司职位：<span>{{ teacher.work_postion }}</span></li>
+                                </ul>
+                            </dd>
+                            <div class="delete jsDeleteFav_teacher" data-favid="{{ teacher.id }}"></div>
+                        </dl>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.jsDeleteFav_teacher').on('click', function () {
+                var _this = $(this),
+                    favid = _this.attr('data-favid');
+                alert("删除成功!")
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "{% url 'ope:fav_add' %}",
+                    data: {
+                        fav_type: 3,
+                        fav_id: favid,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    async: true,
+                    success: function (data) {
+                        Dml.fun.winReload();
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
