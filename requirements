@@ -3,3 +3,4 @@ django-pure-pagination
 django
 django-simple-captcha
 pymysql
+redis
